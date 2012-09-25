@@ -1,4 +1,4 @@
-puppet-xhprof
+Puppet XHProf
 =============
 
-Puppet module for setting up XHProf
+Puppet module for setting up XHProf.
