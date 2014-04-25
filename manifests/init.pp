@@ -15,8 +15,7 @@
 # === Requirements
 #
 # This class requires the apache class from PuppetLabs.
-class xhprof() {
-  $version = '0.9.2'
+class xhprof($version = '0.9.2') {  
 
   if ! defined(Package['build-essential']) {
     package { 'build-essential':
@@ -48,11 +47,11 @@ class xhprof() {
     notify  => Service['httpd'],
   }
 
-  apache::vhost { 'xhprof.33.33.33.10.xip.io':
+  apache::vhost { 'xhprof.drupal.dev':
     docroot     => '/usr/share/php/xhprof_html',
     port        => '80',
     ssl         => false,
-    serveradmin => 'root@dr.peytz.dk',
+    serveradmin => 'admin@localhost.com',
     override    => 'All',
     require     => Exec['xhprof-install'],
   }
