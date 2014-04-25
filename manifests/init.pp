@@ -15,10 +15,21 @@
 # === Requirements
 #
 # This class requires the apache class from PuppetLabs.
-class xhprof($version = '0.9.2') {
-  package { ['build-essential', 'php5-common']:
-    ensure => present,
+class xhprof() {
+  $version = '0.9.2'
+
+  if ! defined(Package['build-essential']) {
+    package { 'build-essential':
+      ensure => present,
+    }
   }
+
+  if ! defined(Package['php5-common']) {
+    package { 'php5-common':
+      ensure => present,
+    }
+  }  
+
   if ! defined(Package['php-pear']) {
     package { 'php-pear':
       ensure => present,
@@ -26,7 +37,7 @@ class xhprof($version = '0.9.2') {
   }
 
   exec { 'xhprof-install':
-    command => 'pecl install pecl.php.net/xhprof-0.9.2',
+    command => "pecl install pecl.php.net/xhprof-{$version}",
     creates => '/usr/share/php/xhprof_html',
     require => [Package['build-essential'], Package['php-pear']],
   }
