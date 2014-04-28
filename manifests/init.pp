@@ -18,7 +18,7 @@
 class xhprof($version = '0.9.2') {  
 
   exec { 'xhprof-install':
-    command => "pecl install pecl.php.net/xhprof-{$version}",
+    command => "pecl install pecl.php.net/xhprof-$version",
     creates => '/usr/share/php/xhprof_html',
     require => [Package['build-essential'], Package['php-pear']],
   }
