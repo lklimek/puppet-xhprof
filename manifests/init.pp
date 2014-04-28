@@ -23,10 +23,10 @@ class xhprof($version = '0.9.2') {
     require => [Package['build-essential'], Package['php-pear']],
   }
 
-  file { '/etc/php5/conf.d/xhprof.ini':
+  file { '/etc/php5/apache2/conf.d/xhprof.ini':
     source  => 'puppet:///modules/xhprof/xhprof.ini',
     require => Exec['xhprof-install'],
-    notify  => Service['httpd'],
+    notify  => Service['httpd'],    
   }
 
   apache::vhost { 'xhprof.drupal.dev':
