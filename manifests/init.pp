@@ -8,6 +8,9 @@
 # [*version*]
 #   The version of the package to install. Defaults to '0.9.2'.
 #
+# [*ensure*]
+#   present, absent (absent only disables the module)
+#
 # === Examples
 #
 #   class { 'xhprof': }
@@ -15,7 +18,7 @@
 # === Requirements
 #
 # This class requires the apache class from PuppetLabs.
-class xhprof($version = '0.9.2') {  
+class xhprof($version = '0.9.2', $ensure = 'present') {  
 
   exec { 'xhprof-install':
     command => "pecl install pecl.php.net/xhprof-$version",
@@ -26,7 +29,8 @@ class xhprof($version = '0.9.2') {
   file { '/etc/php5/apache2/conf.d/xhprof.ini':
     source  => 'puppet:///modules/xhprof/xhprof.ini',
     require => Exec['xhprof-install'],
-    notify  => Service['httpd'],    
+    notify  => Service['httpd'],
+    ensure => $ensure,
   }
 
   apache::vhost { 'xhprof.drupal.dev':
@@ -36,5 +40,6 @@ class xhprof($version = '0.9.2') {
     serveradmin => 'admin@localhost.com',
     override    => 'All',
     require     => Exec['xhprof-install'],
+    ensure      => $ensure,
   }
 }
