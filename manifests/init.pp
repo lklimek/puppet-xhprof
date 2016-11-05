@@ -18,15 +18,20 @@
 # === Requirements
 #
 # This class requires the apache class from PuppetLabs.
-class xhprof($version = '0.9.2', $ensure = 'present') {  
+class xhprof($version = '0.9.4', $ensure = 'present', $manage_packages = true) {
+  Package { [gcc, 'gcc-c++', make, 'openssl-devel', 'which', 'file', 're2c']:}
 
   exec { 'xhprof-install':
-    command => "pecl install pecl.php.net/xhprof-$version",
-    creates => '/usr/share/php/xhprof_html',
-    require => [Package['build-essential'], Package['php-pear']],
+    command => "/usr/bin/pecl install pecl.php.net/xhprof-$version",
+    creates => '/usr/share/pear/xhprof_html',
+    require => [
+        # Package['build-essential'], 
+        Package['gcc'],
+        Package['php56w-pear']
+    ],
   }
 
-  file { '/etc/php5/apache2/conf.d/xhprof.ini':
+  file { '/etc/php.d/xhprof.ini':
     source  => 'puppet:///modules/xhprof/xhprof.ini',
     require => Exec['xhprof-install'],
     notify  => Service['httpd'],
@@ -34,8 +39,8 @@ class xhprof($version = '0.9.2', $ensure = 'present') {
   }
 
   apache::vhost { 'xhprof.drupal.dev':
-    docroot     => '/usr/share/php/xhprof_html',
-    port        => '80',
+    docroot     => '/usr/share/pear/xhprof_html',
+    port        => '1280',
     ssl         => false,
     serveradmin => 'admin@localhost.com',
     override    => 'All',
